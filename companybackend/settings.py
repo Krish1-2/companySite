@@ -32,6 +32,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders'
 ]
+LOGIN_URL = '/login/'  # URL for login view
+LOGOUT_URL = '/logout/'  # URL for logout view
+LOGIN_REDIRECT_URL = '/' 
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
