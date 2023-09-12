@@ -29,10 +29,10 @@ def rate(response):
 
     # Determine overall sentiment based on compound score
     if score['compound'] >= 0.05:
-        star=(score['compund']*10)%2
+        star=(score['compound']*10)%2
         return star
     elif score['compound'] <= -0.05:
-        star=5-abs((score['compund']*10)%2)
+        star=5-abs((score['compound']*10)%2)
         return star
     else:
         return 2.5

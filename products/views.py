@@ -109,8 +109,9 @@ class Review(APIView):
         print(name,email,date,product)
         rating=rate(review)
         request.data['rating'] = rating
-        # name=name,email=email,product=product,review=review,date=date,rating=rating
+      
         serializer = ReviewSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
+            print("saving")
             serializer.save()
         return Response(serializer.data)
