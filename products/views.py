@@ -94,9 +94,10 @@ class RateView(APIView):
             return Response({'error': 'Invalid item'})
 
 
-class Review(APIView):
+class getReview(APIView):
     def get(self,request):
         reviews=Review.objects.all()
+        reviews=ReviewSerializer(reviews,many=True)
         return Response(reviews.data)
     
     def post(self,request):
