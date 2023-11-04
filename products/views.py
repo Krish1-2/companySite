@@ -6,7 +6,9 @@ from .serializer import *
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import get_user_model
 from rating import rate
-
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class Register(APIView):
     def post(self, request):
@@ -29,6 +31,7 @@ class Register(APIView):
 
 
 class Login(APIView):
+  
     def post(self, request):
         data = request.data
         username = data.get('username')
@@ -37,12 +40,32 @@ class Login(APIView):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            })
+            # return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
         
+class Logout(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class RateView(APIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[IsAuthenticated]
+    
     # item='Pipes'
     def post(self,request):
         print(request.data)
@@ -93,8 +116,10 @@ class RateView(APIView):
         else:
             return Response({'error': 'Invalid item'})
 
-
 class getReview(APIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[IsAuthenticated]
+
     def get(self,request):
         reviews=Review.objects.all()
         reviews=ReviewSerializer(reviews,many=True)
