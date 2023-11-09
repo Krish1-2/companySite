@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-9ldk_%4%@y5%kubh8un-5+fnx_7hu95n9-$+-#agf6--op!va8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['49.36.122.92/32','127.0.0.1','localhost']
 
 CORS_ALLOW_ALL_ORIGINS = True 
 
@@ -120,6 +120,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'bsckend',
+        # 'CLIENT': {
+        #     'host': 'mongodb+srv://krishhmehta13:krish@cluster0.mvl3vc0.mongodb.net/',
+        # }
        
     }
 }

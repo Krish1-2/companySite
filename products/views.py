@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -141,3 +142,23 @@ class getReview(APIView):
             print("saving")
             serializer.save()
         return Response(serializer.data)
+    
+
+class GoogleLogin(APIView):
+    def post(self, request):
+       
+        username = request.data.get('username')  # Retrieve username from request data
+        User = get_user_model()
+        user, created = User.objects.get_or_create(username=username)
+
+        if created:
+            
+            return JsonResponse({'message': 'User created', 'user_id': user.id})
+        else:
+       
+            login(request, user)
+            refresh = RefreshToken.for_user(user)
+            return JsonResponse({
+                'message': 'User logged in',
+                'user_id': user.id,
+                'access': str(refresh.access_token),})
